@@ -33,7 +33,7 @@ export default function ProductPage({ params }: Props) {
       setSizeError(true);
       return;
     }
-    addItem(product, selectedSize);
+    addItem(product!, selectedSize);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
   }
