@@ -1,0 +1,520 @@
+"use client";
+
+import { useState, useCallback } from "react";
+import {
+  Calendar, Clock, Mail, MapPin, Phone,
+  ArrowRight, CheckCircle, Zap, User, Building2, MessageSquare
+} from "lucide-react";
+
+const timeSlots = [
+  "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
+  "11:00 AM", "11:30 AM", "12:00 PM",
+  "1:00 PM",  "1:30 PM",  "2:00 PM",  "2:30 PM",
+  "3:00 PM",  "3:30 PM",  "4:00 PM",  "4:30 PM",
+  "5:00 PM",
+];
+
+const services = [
+  "AI Chatbot / Voice Agent",
+  "Workflow Automation",
+  "Email & Outreach Automation",
+  "CRM & Data Integration",
+  "AI Document Processing",
+  "Analytics & Reporting",
+  "Not sure — need consultation",
+];
+
+const COMPANY_EMAIL = "hello@accelyx.ai";
+const GOOGLE_SHEET_URL =
+  "https://script.google.com/macros/s/AKfycbwjdDjwmho87BZ1YBqegy800iKh88xWluht4sQAijT4tn-muTQvKWlaGFqSR8LadV-Y/exec";
+
+interface FormState {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  company: string;
+  service: string;
+  date: string;
+  time: string;
+  message: string;
+}
+
+const defaultForm: FormState = {
+  firstName: "", lastName: "", email: "", phone: "",
+  company: "", service: "", date: "", time: "", message: "",
+};
+
+export default function CTA() {
+  const [form, setForm] = useState<FormState>(defaultForm);
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Partial<FormState>>({});
+
+  const set = (field: keyof FormState) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    setForm((prev) => ({ ...prev, [field]: e.target.value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const validate = (): boolean => {
+    const errs: Partial<FormState> = {};
+    if (!form.firstName.trim()) errs.firstName = "Required";
+    if (!form.lastName.trim())  errs.lastName  = "Required";
+    if (!form.email.trim() || !/\S+@\S+\.\S+/.test(form.email))
+      errs.email = "Valid email required";
+    if (!form.service)      errs.service = "Please select a service";
+    if (!form.date)         errs.date    = "Please pick a date";
+    if (!form.time)         errs.time    = "Please pick a time";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
+
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
+
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      await fetch(GOOGLE_SHEET_URL, {
+        method: "POST",
+        body: JSON.stringify(form),
+        headers: { "Content-Type": "text/plain" },
+        mode: "no-cors",
+      });
+      // no-cors means we can't read the response, but data is sent
+      setSubmitted(true);
+      setForm(defaultForm);
+    } catch {
+      // Fallback: try via hidden iframe form post
+      try {
+        const f = document.createElement("form");
+        f.method = "POST";
+        f.action = GOOGLE_SHEET_URL;
+        f.target = "_blank";
+        f.style.display = "none";
+        const input = document.createElement("input");
+        input.name = "data";
+        input.value = JSON.stringify(form);
+        f.appendChild(input);
+        document.body.appendChild(f);
+        f.submit();
+        document.body.removeChild(f);
+        setSubmitted(true);
+        setForm(defaultForm);
+      } catch {
+        setSubmitError("Something went wrong. Please try again or email us directly.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }, [form]);
+
+  /* ── Min date = tomorrow ── */
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const minDate = tomorrow.toISOString().split("T")[0];
+
+  const inputBase: React.CSSProperties = {
+    background: "var(--bg)",
+    border: "1px solid var(--border)",
+    color: "var(--text)",
+    borderRadius: "0.75rem",
+    padding: "0.75rem 1rem",
+    fontSize: "0.875rem",
+    width: "100%",
+    outline: "none",
+    transition: "border-color 0.2s",
+  };
+
+  const inputErr: React.CSSProperties = {
+    ...inputBase,
+    borderColor: "#ef4444",
+  };
+
+  return (
+    <section id="contact" className="section-padding relative overflow-hidden" style={{ scrollMarginTop: "80px" }}>
+      {/* Background glows */}
+      <div
+        className="glow-orb w-[500px] h-[500px] -top-40 -right-40"
+        style={{ background: "#6366f1" }}
+      />
+      <div
+        className="glow-orb w-[400px] h-[400px] -bottom-40 -left-40"
+        style={{ background: "#06b6d4" }}
+      />
+
+      <div className="container-max relative z-10">
+        {/* ── Section Header ──────────────────────────── */}
+        <div className="text-center mb-14">
+          <span className="section-label mb-4 block">
+            <span className="w-8 h-px inline-block align-middle mr-2" style={{ background: "var(--accent)" }} />
+            Start Your Free Trial
+            <span className="w-8 h-px inline-block align-middle ml-2" style={{ background: "var(--accent)" }} />
+          </span>
+          <h2 className="section-title mb-5">
+            Try It Free for{" "}
+            <span className="gradient-text">7 Days</span>
+          </h2>
+          <p className="section-subtitle max-w-2xl mx-auto">
+            Get a custom AI automation built for your business — completely free for 7 days.
+            No credit card required. No commitment.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+
+          {/* ── LEFT: Contact Info ──────────────────────── */}
+          <div className="lg:col-span-2 flex flex-col gap-6">
+            {/* Info card */}
+            <div
+              className="rounded-2xl p-8"
+              style={{
+                background: "linear-gradient(135deg, rgba(99,102,241,0.12) 0%, rgba(6,182,212,0.08) 100%)",
+                border: "1px solid rgba(99,102,241,0.25)",
+              }}
+            >
+              <div
+                className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+                style={{ background: "linear-gradient(135deg, #6366f1, #06b6d4)" }}
+              >
+                <Zap size={22} className="text-white fill-white" />
+              </div>
+              <h3
+                className="text-xl font-bold mb-2"
+                style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}
+              >
+                Accelyx AI
+              </h3>
+              <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>
+                Free 30-minute strategy call. No sales pitch — just a clear
+                roadmap of how automation can transform your business.
+              </p>
+
+              <div className="flex flex-col gap-4">
+                {[
+                  {
+                    icon: Mail,
+                    label: "Email",
+                    value: COMPANY_EMAIL,
+                    href: `mailto:${COMPANY_EMAIL}`,
+                  },
+                  {
+                    icon: MapPin,
+                    label: "Location",
+                    value: "Remote — serving clients worldwide",
+                    href: null,
+                  },
+                ].map(({ icon: Icon, label, value, href }) => (
+                  <div key={label} className="flex items-start gap-3">
+                    <div
+                      className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
+                      style={{ background: "var(--card)", border: "1px solid var(--border)" }}
+                    >
+                      <Icon size={15} style={{ color: "var(--accent)" }} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: "var(--muted)" }}>
+                        {label}
+                      </p>
+                      {href ? (
+                        <a
+                          href={href}
+                          className="text-sm font-medium transition-colors duration-200"
+                          style={{ color: "var(--text)" }}
+                          onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "var(--accent)"; }}
+                          onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "var(--text)"; }}
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <p className="text-sm" style={{ color: "var(--text)" }}>{value}</p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* What to expect */}
+            <div
+              className="rounded-2xl p-6"
+              style={{ background: "var(--card)", border: "1px solid var(--border)" }}
+            >
+              <p
+                className="text-sm font-bold uppercase tracking-widest mb-4"
+                style={{ color: "var(--text)" }}
+              >
+                What to Expect
+              </p>
+              {[
+                { icon: Clock,        text: "7-day free trial — no credit card needed" },
+                { icon: CheckCircle,  text: "Custom automation built for your workflow" },
+                { icon: CheckCircle,  text: "Full support during your trial period" },
+                { icon: CheckCircle,  text: "Zero pressure — cancel anytime" },
+              ].map(({ icon: Icon, text }, i) => (
+                <div key={i} className="flex items-center gap-2.5 mb-3 last:mb-0">
+                  <Icon size={15} style={{ color: "#06b6d4", flexShrink: 0 }} />
+                  <span className="text-sm" style={{ color: "var(--muted)" }}>{text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── RIGHT: Booking Form ─────────────────────── */}
+          <div
+            className="lg:col-span-3 rounded-2xl p-8"
+            style={{ background: "var(--card)", border: "1px solid var(--border)" }}
+          >
+            {submitted ? (
+              /* ── Success State ── */
+              <div className="flex flex-col items-center justify-center text-center py-12 gap-5">
+                <div
+                  className="w-20 h-20 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(99,102,241,0.15)", border: "2px solid var(--accent)" }}
+                >
+                  <CheckCircle size={36} style={{ color: "var(--accent)" }} />
+                </div>
+                <h3
+                  className="text-2xl font-bold"
+                  style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}
+                >
+                  Request Sent!
+                </h3>
+                <p style={{ color: "var(--muted)", maxWidth: 340 }}>
+                  Your booking request is on its way. We'll confirm your call at{" "}
+                  <strong style={{ color: "var(--text)" }}>{form.time}</strong> on{" "}
+                  <strong style={{ color: "var(--text)" }}>{form.date}</strong> via email.
+                </p>
+                <button
+                  onClick={() => { setSubmitted(false); setForm(defaultForm); }}
+                  className="btn-secondary px-6 py-3 text-sm mt-2"
+                >
+                  Submit another request
+                </button>
+              </div>
+            ) : (
+              /* ── Form ── */
+              <form onSubmit={handleSubmit} noValidate>
+                <p
+                  className="text-lg font-bold mb-6"
+                  style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}
+                >
+                  Book Your Free Strategy Call
+                </p>
+
+                {/* Name row */}
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  {(["firstName", "lastName"] as const).map((field) => (
+                    <div key={field}>
+                      <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                        <User size={11} />
+                        {field === "firstName" ? "First Name" : "Last Name"}
+                        <span style={{ color: "#ef4444" }}>*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={field === "firstName" ? "John" : "Doe"}
+                        value={form[field]}
+                        onChange={set(field)}
+                        style={errors[field] ? inputErr : inputBase}
+                        onFocus={(e) => { if (!errors[field]) e.target.style.borderColor = "var(--accent)"; }}
+                        onBlur={(e)  => { if (!errors[field]) e.target.style.borderColor = "var(--border)"; }}
+                      />
+                      {errors[field] && (
+                        <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors[field]}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Email */}
+                <div className="mb-4">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                    <Mail size={11} />
+                    Business Email
+                    <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="you@company.com"
+                    value={form.email}
+                    onChange={set("email")}
+                    style={errors.email ? inputErr : inputBase}
+                    onFocus={(e) => { if (!errors.email) e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { if (!errors.email) e.target.style.borderColor = "var(--border)"; }}
+                  />
+                  {errors.email && (
+                    <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.email}</p>
+                  )}
+                </div>
+
+                {/* Phone */}
+                <div className="mb-4">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                    <Phone size={11} />
+                    Phone Number (optional)
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="+17735647389"
+                    value={form.phone}
+                    maxLength={15}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^0-9+]/g, "");
+                      if (val.length <= 15) setForm((prev) => ({ ...prev, phone: val }));
+                    }}
+                    style={inputBase}
+                    onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { e.target.style.borderColor = "var(--border)"; }}
+                  />
+                </div>
+
+                {/* Company */}
+                <div className="mb-4">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                    <Building2 size={11} />
+                    Company Name (optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Your company"
+                    value={form.company}
+                    onChange={set("company")}
+                    style={inputBase}
+                    onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { e.target.style.borderColor = "var(--border)"; }}
+                  />
+                </div>
+
+                {/* Service */}
+                <div className="mb-4">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                    <Zap size={11} />
+                    I'm interested in
+                    <span style={{ color: "#ef4444" }}>*</span>
+                  </label>
+                  <select
+                    value={form.service}
+                    onChange={set("service")}
+                    style={errors.service ? inputErr : inputBase}
+                    onFocus={(e) => { if (!errors.service) e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { if (!errors.service) e.target.style.borderColor = "var(--border)"; }}
+                  >
+                    <option value="" style={{ background: "var(--bg)" }}>Select a service...</option>
+                    {services.map((s) => (
+                      <option key={s} value={s} style={{ background: "var(--bg)" }}>{s}</option>
+                    ))}
+                  </select>
+                  {errors.service && (
+                    <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.service}</p>
+                  )}
+                </div>
+
+                {/* Date + Time */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                  {/* Date */}
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                      <Calendar size={11} />
+                      Preferred Date
+                      <span style={{ color: "#ef4444" }}>*</span>
+                    </label>
+                    <input
+                      type="date"
+                      min={minDate}
+                      value={form.date}
+                      onChange={set("date")}
+                      onClick={(e) => (e.target as HTMLInputElement).showPicker()}
+                      style={{ ...errors.date ? inputErr : inputBase, cursor: "pointer" }}
+                      onFocus={(e) => { if (!errors.date) e.target.style.borderColor = "var(--accent)"; }}
+                      onBlur={(e)  => { if (!errors.date) e.target.style.borderColor = "var(--border)"; }}
+                    />
+                    {errors.date && (
+                      <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.date}</p>
+                    )}
+                  </div>
+
+                  {/* Time */}
+                  <div>
+                    <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                      <Clock size={11} />
+                      Preferred Time (EST)
+                      <span style={{ color: "#ef4444" }}>*</span>
+                    </label>
+                    <select
+                      value={form.time}
+                      onChange={set("time")}
+                      style={errors.time ? inputErr : inputBase}
+                      onFocus={(e) => { if (!errors.time) e.target.style.borderColor = "var(--accent)"; }}
+                      onBlur={(e)  => { if (!errors.time) e.target.style.borderColor = "var(--border)"; }}
+                    >
+                      <option value="" style={{ background: "var(--bg)" }}>Select time...</option>
+                      {timeSlots.map((t) => (
+                        <option key={t} value={t} style={{ background: "var(--bg)" }}>{t}</option>
+                      ))}
+                    </select>
+                    {errors.time && (
+                      <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.time}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div className="mb-6">
+                  <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
+                    <MessageSquare size={11} />
+                    What do you want to automate? (optional)
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Describe your current workflow or biggest pain point..."
+                    value={form.message}
+                    onChange={set("message")}
+                    style={{ ...inputBase, resize: "none" }}
+                    onFocus={(e) => { e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={(e)  => { e.target.style.borderColor = "var(--border)"; }}
+                  />
+                </div>
+
+                {/* Error message */}
+                {submitError && (
+                  <p className="text-sm text-center mb-4 p-3 rounded-lg" style={{ color: "#ef4444", background: "rgba(239,68,68,0.1)" }}>
+                    {submitError}
+                  </p>
+                )}
+
+                {/* Submit */}
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="btn-primary w-full py-4 text-base justify-center"
+                  style={{ opacity: submitting ? 0.7 : 1, cursor: submitting ? "not-allowed" : "pointer" }}
+                >
+                  {submitting ? (
+                    <>Submitting...</>
+                  ) : (
+                    <>
+                      <Calendar size={18} />
+                      Confirm My Strategy Call
+                      <ArrowRight size={18} />
+                    </>
+                  )}
+                </button>
+
+                <p className="text-xs text-center mt-4" style={{ color: "var(--muted)" }}>
+                  7-day free trial · No credit card · We'll confirm within 24 hours
+                </p>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
