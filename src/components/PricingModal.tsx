@@ -66,18 +66,20 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+      className="fixed inset-0 z-[100] overflow-y-auto"
       onClick={onClose}
     >
       {/* Backdrop */}
-      <div className="absolute inset-0" style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)" }} />
+      <div className="fixed inset-0" style={{ background: "rgba(0,0,0,0.7)", backdropFilter: "blur(8px)" }} />
 
-      {/* Modal */}
-      <div
-        className="relative w-full max-w-4xl rounded-2xl p-6 md:p-10"
-        style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
-        onClick={(e) => e.stopPropagation()}
-      >
+      {/* Centering wrapper */}
+      <div className="min-h-full flex items-center justify-center p-4">
+        {/* Modal */}
+        <div
+          className="relative w-full max-w-4xl rounded-2xl p-6 md:p-10"
+          style={{ background: "var(--bg)", border: "1px solid var(--border)" }}
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Close */}
         <button
           onClick={onClose}
@@ -204,6 +206,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
         <p className="text-center text-xs mt-6" style={{ color: "var(--muted)" }}>
           7-day free trial · No credit card required · Full details discussed on your strategy call
         </p>
+      </div>
       </div>
     </div>
   );
