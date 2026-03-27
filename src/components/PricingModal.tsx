@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { X, CheckCircle, ArrowRight, Zap, Rocket, Building2 } from "lucide-react";
 
 interface PricingModalProps {
@@ -54,6 +55,18 @@ const plans = [
 ];
 
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const scrollToContact = () => {
@@ -66,7 +79,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] overflow-y-auto"
+      className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain"
       onClick={onClose}
     >
       {/* Backdrop */}

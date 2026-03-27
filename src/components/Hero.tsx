@@ -45,8 +45,9 @@ export default function Hero() {
       <div className="container-max section-padding relative z-10">
         <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
           {/* ── Label badge ──────────────────────── */}
-          <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in"
+          <button
+            onClick={() => scrollTo("#contact")}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in cursor-pointer transition-all duration-300 hover:scale-105"
             style={{
               background: "rgba(99,102,241,0.1)",
               border: "1px solid rgba(99,102,241,0.3)",
@@ -58,7 +59,7 @@ export default function Hero() {
               style={{ background: "#10b981" }}
             />
             7-Day Free Trial — No Credit Card Required
-          </div>
+          </button>
 
           {/* ── Headline ─────────────────────────── */}
           <h1

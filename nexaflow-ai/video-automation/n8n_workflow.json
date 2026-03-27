@@ -1,0 +1,425 @@
+{
+  "name": "FlowRich AI Video Generator + Auto Post",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Daily Schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [200, 300]
+    },
+    {
+      "parameters": {},
+      "id": "manual-trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [200, 500]
+    },
+    {
+      "parameters": {
+        "jsCode": "const prompts = [\n  {\n    prompt: 'Futuristic holographic dashboard floating in dark space, glowing blue and purple data streams, AI neural network visualization, workflow automation nodes connecting with light beams, cinematic lighting, 4K quality',\n    tiktok_caption: 'We automate businesses with AI so you don\\'t have to do it manually.\\nChatbots. Workflows. Emails. CRM. All on autopilot.\\n150+ automations built. 10x ROI.\\nComment \"automate\" and we\\'ll show you how.\\n\\n#AIautomation #BusinessAutomation #AI #FlowRich #Entrepreneur #TechStartup #WorkSmarter #Automation #SaaS',\n    instagram_caption: 'Your business is running on manual mode. We fix that.\\n\\nFlowRich builds AI systems that work 24/7:\\n\\u2022 AI chatbots that book appointments for you\\n\\u2022 Workflows that eliminate repetitive tasks\\n\\u2022 Emails that send themselves\\n\\u2022 CRM that stays synced automatically\\n\\n150+ automations deployed | 10x average ROI\\n\\nComment \"automate\" to get started.\\n\\n#AIautomation #FlowRich #BusinessGrowth #Automation #AIChatbot #WorkflowAutomation #Entrepreneur #DigitalTransformation #AI #SmallBusinessTips',\n    youtube_title: 'We Automate Your Business With AI',\n    youtube_description: 'We automate your entire business with AI.\\nMost businesses waste 20+ hours a week on tasks AI can handle \\u2014 emails, lead follow-ups, data entry, customer support.\\nFlowRich builds custom automation systems: AI chatbots, workflow automation, smart email sequences, CRM sync, and AI-powered analytics.\\n150+ automations deployed. 98% client satisfaction. 10x average ROI.\\nComment \"automate\" and we\\'ll break down exactly how it works for your business.\\n\\n#AIautomation #FlowRich #BusinessAutomation #AI #Entrepreneur'\n  },\n  {\n    prompt: 'Robot hands typing on a holographic keyboard, digital automation workflow flowing across screen, neon blue and indigo colors, particles and data visualization, dark tech background, cinematic',\n    tiktok_caption: 'Your competitors are automating everything. Are you?\\nAI chatbots. Workflow automation. Email sequences. CRM sync.\\nAll running 24/7 without you lifting a finger.\\nComment \"automate\" to learn how.\\n\\n#AIautomation #BusinessAutomation #AI #FlowRich #Entrepreneur #TechStartup #WorkSmarter #Automation #SaaS',\n    instagram_caption: 'Stop doing manually what AI can handle.\\n\\nFlowRich builds custom automation systems:\\n\\u2022 AI Chatbots & Voice Agents\\n\\u2022 Workflow Automation\\n\\u2022 Email & Outreach Automation\\n\\u2022 CRM & Data Integration\\n\\u2022 AI Document Processing\\n\\u2022 Analytics & Reporting\\n\\n98% client satisfaction | 10x ROI\\n\\nComment \"automate\" to get started.\\n\\n#AIautomation #FlowRich #BusinessGrowth #Automation #AIChatbot #WorkflowAutomation #Entrepreneur #DigitalTransformation #AI #SmallBusinessTips',\n    youtube_title: 'Stop Doing Manually What AI Can Handle',\n    youtube_description: 'Your competitors are already automating. Are you?\\nFlowRich builds AI-powered automation systems that handle your repetitive tasks 24/7.\\nChatbots, workflows, emails, CRM sync, document processing, analytics \\u2014 all on autopilot.\\n150+ automations deployed. 98% client satisfaction. 10x average ROI.\\nComment \"automate\" to learn how.\\n\\n#AIautomation #FlowRich #BusinessAutomation #AI #Entrepreneur'\n  },\n  {\n    prompt: 'Abstract AI brain made of glowing circuits and nodes, data flowing through connected pathways, purple and cyan gradient lighting, futuristic tech aesthetic, smooth animation, dark background',\n    tiktok_caption: 'This is what happens when AI runs your business.\\n12,847 tasks automated. 2,103 hours saved. $48.2K cost reduced.\\nAll in one month.\\nComment \"automate\" to get your free automation audit.\\n\\n#AIautomation #BusinessAutomation #AI #FlowRich #Entrepreneur #TechStartup #WorkSmarter #Automation #SaaS',\n    instagram_caption: 'What if your business ran itself?\\n\\nWith FlowRich, it basically does:\\n\\u2022 12,847 tasks automated\\n\\u2022 2,103 hours saved\\n\\u2022 $48.2K cost reduced\\n\\u2022 All in one month\\n\\nWe build AI systems that work while you sleep.\\n\\nComment \"automate\" to get your free automation audit.\\n\\n#AIautomation #FlowRich #BusinessGrowth #Automation #AIChatbot #WorkflowAutomation #Entrepreneur #DigitalTransformation #AI #SmallBusinessTips',\n    youtube_title: 'What Happens When AI Runs Your Business',\n    youtube_description: '12,847 tasks automated. 2,103 hours saved. $48.2K cost reduced. All in one month.\\nFlowRich builds custom AI automation systems that handle everything \\u2014 chatbots, workflows, emails, CRM, analytics.\\n150+ automations deployed. 98% client satisfaction. 10x average ROI.\\nComment \"automate\" to get your free automation audit.\\n\\n#AIautomation #FlowRich #BusinessAutomation #AI #Entrepreneur'\n  }\n];\n\nconst dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);\nconst index = dayOfYear % prompts.length;\n\nreturn [prompts[index]];"
+      },
+      "id": "select-prompt",
+      "name": "Select Prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.replicate.com/v1/predictions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ version: 'beecf59c4aee8d81bf04f0381033dfa10dc16e845b4ae00d281e2fa377e48a9f', input: { prompt: $json.prompt, negative_prompt: 'bad quality, worst quality, blurry, low resolution, watermark, text, logo', width: 768, height: 1344, num_frames: 16, fps: 8, guidance_scale: 7.5, num_inference_steps: 25 } }) }}"
+      },
+      "id": "replicate-create",
+      "name": "Create Video (Replicate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [700, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "replicate-auth",
+          "name": "Replicate API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "wait-for-video",
+      "name": "Wait 30s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [950, 400]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "=https://api.replicate.com/v1/predictions/{{ $('Create Video (Replicate)').item.json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "id": "check-status",
+      "name": "Check Video Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "replicate-auth",
+          "name": "Replicate API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "succeeded",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-ready",
+      "name": "Video Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1450, 400]
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Check Video Status').item.json.output }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "download-video",
+      "name": "Download Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1700, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const promptData = $('Select Prompt').item.json;\n\nreturn [{\n  json: {\n    tiktok_caption: promptData.tiktok_caption,\n    instagram_caption: promptData.instagram_caption,\n    youtube_title: promptData.youtube_title,\n    youtube_description: promptData.youtube_description,\n    filename: `flowrich_${Date.now()}.mp4`,\n    generated_at: new Date().toISOString()\n  },\n  binary: $input.item.binary\n}];"
+      },
+      "id": "prepare-post",
+      "name": "Prepare Post Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1950, 300]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "retry-wait",
+      "name": "Wait & Retry",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1700, 500]
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ post_info: { title: $json.tiktok_caption.substring(0, 150), privacy_level: 'PUBLIC_TO_EVERYONE', disable_duet: false, disable_comment: false, disable_stitch: false, video_cover_timestamp_ms: 1000 }, source_info: { source: 'PULL_FROM_URL', video_url: $('Check Video Status').item.json.output } }) }}"
+      },
+      "id": "post-tiktok",
+      "name": "Post to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2250, 100],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "tiktok-auth",
+          "name": "TikTok API"
+        }
+      }
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $credentials.instagramBusinessId }}/media",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ media_type: 'REELS', video_url: $('Check Video Status').item.json.output, caption: $json.instagram_caption, share_to_feed: true }) }}"
+      },
+      "id": "ig-create-container",
+      "name": "IG Create Reel Container",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2250, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "instagram-auth",
+          "name": "Instagram Graph API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "ig-wait",
+      "name": "IG Wait for Upload",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.facebook.com/v19.0/{{ $credentials.instagramBusinessId }}/media_publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ creation_id: $('IG Create Reel Container').item.json.id }) }}"
+      },
+      "id": "ig-publish",
+      "name": "IG Publish Reel",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2750, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "instagram-auth",
+          "name": "Instagram Graph API"
+        }
+      }
+    },
+
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ snippet: { title: $json.youtube_title, description: $json.youtube_description, tags: ['AI automation', 'FlowRich', 'business automation', 'AI', 'workflow automation'], categoryId: '28' }, status: { privacyStatus: 'public', selfDeclaredMadeForKids: false, shorts: true } }) }}"
+      },
+      "id": "yt-init-upload",
+      "name": "YT Init Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2250, 500],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "youtube-oauth",
+          "name": "YouTube OAuth2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "={{ $json.headers.location || $json.Location }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "oAuth2Api",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "video/mp4"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "raw",
+        "body": "={{ $('Prepare Post Data').item.binary.data }}"
+      },
+      "id": "yt-upload-video",
+      "name": "YT Upload Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2500, 500],
+      "credentials": {
+        "oAuth2Api": {
+          "id": "youtube-oauth",
+          "name": "YouTube OAuth2"
+        }
+      }
+    },
+
+    {
+      "parameters": {
+        "jsCode": "const tiktok = $('Post to TikTok').item.json;\nconst instagram = $('IG Publish Reel').item.json;\nconst youtube = $('YT Upload Video').item.json;\n\nreturn [{\n  json: {\n    status: 'All platforms posted successfully',\n    tiktok: { status: tiktok.data?.publish_id ? 'success' : 'check manually', publish_id: tiktok.data?.publish_id },\n    instagram: { status: instagram.id ? 'success' : 'check manually', media_id: instagram.id },\n    youtube: { status: youtube.id ? 'success' : 'check manually', video_id: youtube.id },\n    posted_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "post-summary",
+      "name": "Post Summary",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2950, 300]
+    }
+  ],
+  "connections": {
+    "Daily Schedule": {
+      "main": [
+        [{ "node": "Select Prompt", "type": "main", "index": 0 }]
+      ]
+    },
+    "Manual Trigger": {
+      "main": [
+        [{ "node": "Select Prompt", "type": "main", "index": 0 }]
+      ]
+    },
+    "Select Prompt": {
+      "main": [
+        [{ "node": "Create Video (Replicate)", "type": "main", "index": 0 }]
+      ]
+    },
+    "Create Video (Replicate)": {
+      "main": [
+        [{ "node": "Wait 30s", "type": "main", "index": 0 }]
+      ]
+    },
+    "Wait 30s": {
+      "main": [
+        [{ "node": "Check Video Status", "type": "main", "index": 0 }]
+      ]
+    },
+    "Check Video Status": {
+      "main": [
+        [{ "node": "Video Ready?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Video Ready?": {
+      "main": [
+        [{ "node": "Download Video", "type": "main", "index": 0 }],
+        [{ "node": "Wait & Retry", "type": "main", "index": 0 }]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [{ "node": "Prepare Post Data", "type": "main", "index": 0 }]
+      ]
+    },
+    "Wait & Retry": {
+      "main": [
+        [{ "node": "Check Video Status", "type": "main", "index": 0 }]
+      ]
+    },
+    "Prepare Post Data": {
+      "main": [
+        [
+          { "node": "Post to TikTok", "type": "main", "index": 0 },
+          { "node": "IG Create Reel Container", "type": "main", "index": 0 },
+          { "node": "YT Init Upload", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IG Create Reel Container": {
+      "main": [
+        [{ "node": "IG Wait for Upload", "type": "main", "index": 0 }]
+      ]
+    },
+    "IG Wait for Upload": {
+      "main": [
+        [{ "node": "IG Publish Reel", "type": "main", "index": 0 }]
+      ]
+    },
+    "YT Init Upload": {
+      "main": [
+        [{ "node": "YT Upload Video", "type": "main", "index": 0 }]
+      ]
+    },
+    "Post to TikTok": {
+      "main": [
+        [{ "node": "Post Summary", "type": "main", "index": 0 }]
+      ]
+    },
+    "IG Publish Reel": {
+      "main": [
+        [{ "node": "Post Summary", "type": "main", "index": 0 }]
+      ]
+    },
+    "YT Upload Video": {
+      "main": [
+        [{ "node": "Post Summary", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [
+    { "name": "FlowRich" },
+    { "name": "Video Automation" },
+    { "name": "AI Content" },
+    { "name": "Social Media" }
+  ]
+}
