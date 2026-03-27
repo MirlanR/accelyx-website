@@ -26,7 +26,7 @@ const services = [
 
 const COMPANY_EMAIL = "hello@accelyx.ai";
 const GOOGLE_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbwjdDjwmho87BZ1YBqegy800iKh88xWluht4sQAijT4tn-muTQvKWlaGFqSR8LadV-Y/exec";
+  "https://script.google.com/macros/s/AKfycbx_yf0gKQBZ8YszM_pGFIRY232fAkbotLF3OJvCfPiOXPnL9wbbT6F6nybtD8lkzU4bqw/exec";
 
 interface FormState {
   firstName: string;
