@@ -533,10 +533,7 @@ export default function CTA() {
                       <select
                         value={form.time}
                         onChange={set("time")}
-                        style={{
-                          ...(errors.time ? inputErr : inputBase),
-                          paddingRight: availability !== "idle" ? "2.5rem" : "1rem",
-                        }}
+                        style={errors.time ? inputErr : inputBase}
                         onFocus={(e) => { if (!errors.time) e.target.style.borderColor = "var(--accent)"; }}
                         onBlur={(e)  => { if (!errors.time) e.target.style.borderColor = "var(--border)"; }}
                       >
@@ -546,22 +543,6 @@ export default function CTA() {
                         ))}
                       </select>
 
-                      {/* Availability indicator icon */}
-                      {availability === "checking" && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <Loader2 size={18} className="animate-spin" style={{ color: "var(--accent)" }} />
-                        </span>
-                      )}
-                      {availability === "available" && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <CheckCircle size={18} style={{ color: "#22c55e" }} />
-                        </span>
-                      )}
-                      {availability === "taken" && (
-                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <XCircle size={18} style={{ color: "#ef4444" }} />
-                        </span>
-                      )}
                     </div>
 
                     {/* Availability status message */}
