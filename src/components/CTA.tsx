@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   Calendar, Clock, Mail, MapPin, Phone,
-  ArrowRight, CheckCircle, Zap, User, Building2, MessageSquare
+  ArrowRight, CheckCircle, XCircle, Zap, User, Building2, MessageSquare, Loader2
 } from "lucide-react";
 
 const timeSlots = [
-  "9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM",
-  "11:00 AM", "11:30 AM", "12:00 PM",
-  "1:00 PM",  "1:30 PM",  "2:00 PM",  "2:30 PM",
-  "3:00 PM",  "3:30 PM",  "4:00 PM",  "4:30 PM",
+  "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM",
+  "1:00 PM",  "2:00 PM",  "3:00 PM",  "4:00 PM",
   "5:00 PM",
 ];
 
@@ -29,6 +27,8 @@ const GOOGLE_SHEET_URL =
   "https://script.google.com/macros/s/AKfycbx_yf0gKQBZ8YszM_pGFIRY232fAkbotLF3OJvCfPiOXPnL9wbbT6F6nybtD8lkzU4bqw/exec";
 const N8N_WEBHOOK_URL =
   "https://n8n.srv1299202.hstgr.cloud/webhook/lead-demo";
+const AVAILABILITY_WEBHOOK_URL =
+  "https://n8n.srv1299202.hstgr.cloud/webhook/check-availability";
 
 interface FormState {
   firstName: string;
@@ -51,6 +51,50 @@ export default function CTA() {
   const [form, setForm] = useState<FormState>(defaultForm);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<FormState>>({});
+
+  // Availability check state
+  const [availability, setAvailability] = useState<"idle" | "checking" | "available" | "taken">("idle");
+  const availabilityController = useRef<AbortController | null>(null);
+
+  // Check availability when both date and time are selected
+  useEffect(() => {
+    if (!form.date || !form.time) {
+      setAvailability("idle");
+      return;
+    }
+
+    // Cancel any in-flight request
+    if (availabilityController.current) {
+      availabilityController.current.abort();
+    }
+
+    const controller = new AbortController();
+    availabilityController.current = controller;
+
+    setAvailability("checking");
+
+    fetch(AVAILABILITY_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: form.date, time: form.time }),
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setAvailability(data.available ? "available" : "taken");
+        }
+      })
+      .catch((err) => {
+        if (!controller.signal.aborted) {
+          // If webhook fails, don't block the user — assume available
+          console.warn("Availability check failed:", err);
+          setAvailability("available");
+        }
+      });
+
+    return () => controller.abort();
+  }, [form.date, form.time]);
 
   // Demo mode: press Shift+D to auto-fill the form with typing animation
   useEffect(() => {
@@ -100,6 +144,8 @@ export default function CTA() {
     if (!form.service)      errs.service = "Please select a service";
     if (!form.date)         errs.date    = "Please pick a date";
     if (!form.time)         errs.time    = "Please pick a time";
+    else if (availability === "taken") errs.time = "This slot is taken — please pick another time";
+    else if (availability === "checking") errs.time = "Please wait — checking availability";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -483,18 +529,58 @@ export default function CTA() {
                       Preferred Time (EST)
                       <span style={{ color: "#ef4444" }}>*</span>
                     </label>
-                    <select
-                      value={form.time}
-                      onChange={set("time")}
-                      style={errors.time ? inputErr : inputBase}
-                      onFocus={(e) => { if (!errors.time) e.target.style.borderColor = "var(--accent)"; }}
-                      onBlur={(e)  => { if (!errors.time) e.target.style.borderColor = "var(--border)"; }}
-                    >
-                      <option value="" style={{ background: "var(--bg)" }}>Select time...</option>
-                      {timeSlots.map((t) => (
-                        <option key={t} value={t} style={{ background: "var(--bg)" }}>{t}</option>
-                      ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={form.time}
+                        onChange={set("time")}
+                        style={{
+                          ...(errors.time ? inputErr : inputBase),
+                          paddingRight: availability !== "idle" ? "2.5rem" : "1rem",
+                        }}
+                        onFocus={(e) => { if (!errors.time) e.target.style.borderColor = "var(--accent)"; }}
+                        onBlur={(e)  => { if (!errors.time) e.target.style.borderColor = "var(--border)"; }}
+                      >
+                        <option value="" style={{ background: "var(--bg)" }}>Select time...</option>
+                        {timeSlots.map((t) => (
+                          <option key={t} value={t} style={{ background: "var(--bg)" }}>{t}</option>
+                        ))}
+                      </select>
+
+                      {/* Availability indicator icon */}
+                      {availability === "checking" && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <Loader2 size={18} className="animate-spin" style={{ color: "var(--accent)" }} />
+                        </span>
+                      )}
+                      {availability === "available" && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <CheckCircle size={18} style={{ color: "#22c55e" }} />
+                        </span>
+                      )}
+                      {availability === "taken" && (
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <XCircle size={18} style={{ color: "#ef4444" }} />
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Availability status message */}
+                    {availability === "available" && (
+                      <p className="text-xs mt-1 flex items-center gap-1" style={{ color: "#22c55e" }}>
+                        <CheckCircle size={12} /> This slot is available!
+                      </p>
+                    )}
+                    {availability === "taken" && (
+                      <p className="text-xs mt-1 flex items-center gap-1" style={{ color: "#ef4444" }}>
+                        <XCircle size={12} /> This slot is taken — please pick another time.
+                      </p>
+                    )}
+                    {availability === "checking" && (
+                      <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
+                        Checking availability...
+                      </p>
+                    )}
+
                     {errors.time && (
                       <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.time}</p>
                     )}
