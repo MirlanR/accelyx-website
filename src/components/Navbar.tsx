@@ -20,6 +20,7 @@ const navLinks = [
   { label: "Services",     href: "#services" },
   { label: "How It Works", href: "#how-it-works" },
   { label: "Results",      href: "#results" },
+  { label: "Live Demo",    href: "/demo" },
   { label: "Industries",   href: "#industries" },
   { label: "Pricing",      href: "#pricing-modal" },
   { label: "FAQ",          href: "#faq" },
@@ -41,6 +42,11 @@ export default function Navbar() {
     setMobileOpen(false);
     if (href === "#pricing-modal") {
       setPricingOpen(true);
+      return;
+    }
+    // Direct page links (not hash)
+    if (!href.startsWith("#")) {
+      window.location.href = href;
       return;
     }
     if (window.location.pathname !== "/") {

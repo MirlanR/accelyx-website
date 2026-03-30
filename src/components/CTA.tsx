@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Calendar, Clock, Mail, MapPin, Phone,
   ArrowRight, CheckCircle, Zap, User, Building2, MessageSquare
@@ -27,6 +27,8 @@ const services = [
 const COMPANY_EMAIL = "hello@accelyx.ai";
 const GOOGLE_SHEET_URL =
   "https://script.google.com/macros/s/AKfycbx_yf0gKQBZ8YszM_pGFIRY232fAkbotLF3OJvCfPiOXPnL9wbbT6F6nybtD8lkzU4bqw/exec";
+const N8N_WEBHOOK_URL =
+  "https://n8n.srv1299202.hstgr.cloud/webhook/lead-demo";
 
 interface FormState {
   firstName: string;
@@ -49,6 +51,38 @@ export default function CTA() {
   const [form, setForm] = useState<FormState>(defaultForm);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<FormState>>({});
+
+  // Demo mode: press Shift+D to auto-fill the form with typing animation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.shiftKey && e.key === "D") {
+        const demoData: FormState = {
+          firstName: "Sarah",
+          lastName: "Johnson",
+          email: "sarah@luxrealty.com",
+          phone: "+17865551234",
+          company: "Lux Realty Group",
+          service: "AI Chatbot / Voice Agent",
+          date: "2026-04-02",
+          time: "10:00 AM",
+          message: "We want to automate our lead follow-ups and appointment booking.",
+        };
+        const fields = Object.keys(demoData) as (keyof FormState)[];
+        let delay = 0;
+        fields.forEach((field) => {
+          const value = demoData[field];
+          for (let i = 0; i <= value.length; i++) {
+            setTimeout(() => {
+              setForm((prev) => ({ ...prev, [field]: value.slice(0, i) }));
+            }, delay + i * 40);
+          }
+          delay += value.length * 40 + 300;
+        });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const set = (field: keyof FormState) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -81,35 +115,37 @@ export default function CTA() {
     setSubmitError("");
 
     try {
-      await fetch(GOOGLE_SHEET_URL, {
+      // Send to n8n webhook (primary — triggers Sheet + Calendar + Email)
+      const webhookPayload = {
+        name: `${form.firstName} ${form.lastName}`,
+        email: form.email,
+        phone: form.phone,
+        company: form.company || "Not provided",
+        service: form.service,
+        date: form.date,
+        time: form.time,
+        message: form.message,
+      };
+
+      const n8nPromise = fetch(N8N_WEBHOOK_URL, {
+        method: "POST",
+        body: JSON.stringify(webhookPayload),
+        headers: { "Content-Type": "application/json" },
+      }).catch(() => null); // Don't block on n8n failure
+
+      // Also send to Google Sheet as backup
+      const sheetPromise = fetch(GOOGLE_SHEET_URL, {
         method: "POST",
         body: JSON.stringify(form),
         headers: { "Content-Type": "text/plain" },
         mode: "no-cors",
-      });
-      // no-cors means we can't read the response, but data is sent
+      }).catch(() => null);
+
+      await Promise.all([n8nPromise, sheetPromise]);
       setSubmitted(true);
       setForm(defaultForm);
     } catch {
-      // Fallback: try via hidden iframe form post
-      try {
-        const f = document.createElement("form");
-        f.method = "POST";
-        f.action = GOOGLE_SHEET_URL;
-        f.target = "_blank";
-        f.style.display = "none";
-        const input = document.createElement("input");
-        input.name = "data";
-        input.value = JSON.stringify(form);
-        f.appendChild(input);
-        document.body.appendChild(f);
-        f.submit();
-        document.body.removeChild(f);
-        setSubmitted(true);
-        setForm(defaultForm);
-      } catch {
-        setSubmitError("Something went wrong. Please try again or email us directly.");
-      }
+      setSubmitError("Something went wrong. Please try again or email us directly.");
     } finally {
       setSubmitting(false);
     }
