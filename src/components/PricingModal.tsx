@@ -14,7 +14,7 @@ const plans = [
     icon: Zap,
     price: "$550",
     period: "/ month",
-    setup: "$1,500 one-time setup",
+    setup: "$2,000 one-time setup",
     description: "Perfect if you're just getting started with automation and want to see real results fast.",
     color: "#6366f1",
     highlights: [
@@ -29,14 +29,14 @@ const plans = [
     icon: Rocket,
     price: "$950",
     period: "/ month",
-    setup: "$3,000 one-time setup",
+    setup: "$3,500 one-time setup",
     description: "For growing businesses that want a full automation system working behind the scenes.",
     color: "#06b6d4",
     popular: true,
     highlights: [
-      "Up to 5 automations across your business",
+      "5 automations: leads, booking, invoicing, email, CRM",
       "Advanced AI chatbot + voice calls",
-      "Full CRM and email automation setup",
+      "All your tools connected — no limits",
       "Priority support with dedicated Slack channel",
     ],
   },
@@ -187,16 +187,16 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                   ))}
                 </div>
 
-                {/* CTA */}
+                {/* CTA — all buttons solid and clickable */}
                 <button
                   onClick={scrollToContact}
-                  className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02]"
+                  className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
                   style={{
                     background: plan.popular
                       ? `linear-gradient(135deg, ${plan.color}, #6366f1)`
-                      : "var(--bg)",
-                    border: plan.popular ? "none" : "1px solid var(--border)",
-                    color: plan.popular ? "white" : "var(--text)",
+                      : `linear-gradient(135deg, ${plan.color}cc, ${plan.color})`,
+                    color: "white",
+                    boxShadow: `0 4px 15px ${plan.color}30`,
                   }}
                 >
                   {plan.name === "Premium" ? "Let's Talk" : "Get Started"}

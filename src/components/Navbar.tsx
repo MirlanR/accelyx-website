@@ -21,8 +21,7 @@ const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
   { label: "Results",      href: "#results" },
   { label: "Live Demo",    href: "/demo" },
-  { label: "Industries",   href: "#industries" },
-  { label: "Pricing",      href: "#pricing-modal" },
+  { label: "Pricing",      href: "/pricing" },
   { label: "FAQ",          href: "#faq" },
 ];
 

@@ -8,14 +8,15 @@ const plans = [
     icon: Zap,
     price: "$550",
     period: "/ month",
-    setup: "$1,500 one-time setup",
+    setup: "$2,000 one-time setup",
     tagline: "Perfect if you're just getting started with automation and want to see real results fast.",
     color: "#6366f1",
+    heading: "What you get:",
     features: [
-      "We build one complete automation for your business — like auto-responding to new leads, sending follow-up emails, or syncing your tools together",
-      "An AI chatbot on your website that answers questions and captures leads for you 24/7",
-      "We connect up to 3 of your existing tools (e.g. your CRM, email, calendar, or forms)",
-      "Everything is delivered within 1–2 weeks, fully tested and ready to go",
+      "We build one complete automation for your business — for example, when a new lead fills out your form, we automatically send them a welcome email, add them to your CRM, and notify your team",
+      "An AI chatbot on your website that answers customer questions and captures leads for you around the clock",
+      "We connect up to 3 of your existing tools (like your CRM, email, calendar, or forms) so they all talk to each other",
+      "Everything is delivered within 1 week, fully tested and ready to go",
       "Ongoing support — if anything breaks or needs tweaking, we handle it",
       "Monthly check-in to make sure everything is running smoothly",
     ],
@@ -28,18 +29,23 @@ const plans = [
     icon: Rocket,
     price: "$950",
     period: "/ month",
-    setup: "$3,000 one-time setup",
+    setup: "$3,500 one-time setup",
     tagline: "For growing businesses that want a full automation system working behind the scenes.",
     color: "#06b6d4",
-    features: [
-      "We set up up to 5 automations across your business — lead follow-ups, appointment booking, invoicing, email campaigns, data syncing, and more",
-      "Advanced AI chatbot that handles conversations, qualifies leads, and can even make voice calls on your behalf",
-      "Full CRM setup so every lead, client, and deal is tracked automatically",
-      "Automated email sequences that nurture leads and keep clients engaged without you lifting a finger",
+    heading: "5 automations we set up for you:",
+    numberedFeatures: [
+      "Lead Follow-Up — When someone fills out your form or sends an inquiry, they instantly get a personalized email, a text message, and your team gets notified. No lead slips through the cracks",
+      "Appointment Booking — Clients can book calls directly from your website. It syncs with your calendar, sends confirmation emails, and reminds them before the meeting automatically",
+      "Invoicing & Payments — After a deal is closed, an invoice is created and sent automatically. Payment reminders go out on schedule so you get paid on time without chasing anyone",
+      "Email Campaigns — Automated email sequences that nurture new leads, onboard new clients, and re-engage old contacts — all running in the background without you lifting a finger",
+      "CRM & Data Sync — Every lead, client, deal, and conversation is tracked in one place. All your tools stay in sync so nothing gets lost between your email, calendar, and CRM",
+    ],
+    extras: [
+      "Advanced AI chatbot that qualifies leads and can make voice calls on your behalf",
       "Connect all your tools — no limits on integrations",
-      "Delivered in 3–4 weeks with hands-on onboarding",
-      "Priority support with a dedicated Slack channel for your team",
-      "Monthly performance report showing exactly how automation is saving you time and money",
+      "Delivered in 1–2 weeks with hands-on onboarding",
+      "Priority support with a dedicated Slack channel",
+      "Monthly performance report showing how automation saves you time and money",
     ],
     cta: "Start Now",
     popular: true,
@@ -53,6 +59,7 @@ const plans = [
     setup: "Custom setup",
     tagline: "For companies that want a dedicated AI team to automate everything end-to-end.",
     color: "#8b5cf6",
+    heading: "Everything in Professional, plus:",
     features: [
       "Unlimited automations — we automate every repeatable process in your business",
       "A dedicated AI engineer assigned to your account who knows your business inside and out",
@@ -60,6 +67,7 @@ const plans = [
       "We design and build your entire system architecture from scratch",
       "Custom API connections and software integrations tailored to your exact needs",
       "Guaranteed response times with SLA-backed priority support",
+      "Delivered in 3–4 weeks with full onboarding and training",
       "Quarterly strategy sessions to plan what to automate next",
       "White-label options — put your own brand on everything we build",
     ],
@@ -103,6 +111,7 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start mb-10">
           {plans.map((plan) => {
             const Icon = plan.icon;
+            const p = plan as typeof plan & { numberedFeatures?: string[]; extras?: string[] };
             return (
               <div
                 key={plan.name}
@@ -162,41 +171,100 @@ export default function Pricing() {
 
                 <div className="h-px mb-5" style={{ background: "var(--border)" }} />
 
-                {/* Features */}
-                <ul className="flex flex-col gap-4 mb-8 flex-1">
-                  {plan.features.map((feature) => (
-                    <li
-                      key={feature}
-                      className="flex items-start gap-2.5 text-sm leading-relaxed"
-                      style={{ color: "var(--muted)" }}
-                    >
-                      <Check
-                        size={15}
-                        className="flex-shrink-0 mt-0.5"
-                        style={{ color: plan.color }}
-                      />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
+                {/* Section heading */}
+                <div
+                  className="text-xs font-bold uppercase tracking-wider mb-4"
+                  style={{ color: plan.color }}
+                >
+                  {plan.heading}
+                </div>
 
-                {/* CTA */}
+                {/* Numbered features (Professional) */}
+                {p.numberedFeatures && (
+                  <ol className="flex flex-col gap-4 mb-6 flex-1">
+                    {p.numberedFeatures.map((feature, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm leading-relaxed"
+                        style={{ color: "var(--muted)" }}
+                      >
+                        <span
+                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
+                          style={{ background: `${plan.color}20`, color: plan.color }}
+                        >
+                          {i + 1}
+                        </span>
+                        <span>
+                          <strong style={{ color: "var(--text)" }}>
+                            {feature.split(" — ")[0]}
+                          </strong>
+                          {" — "}
+                          {feature.split(" — ")[1]}
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+
+                {/* Extras (Professional) */}
+                {p.extras && (
+                  <>
+                    <div
+                      className="text-xs font-bold uppercase tracking-wider mb-3"
+                      style={{ color: plan.color }}
+                    >
+                      Also included:
+                    </div>
+                    <ul className="flex flex-col gap-3 mb-8">
+                      {p.extras.map((extra) => (
+                        <li
+                          key={extra}
+                          className="flex items-start gap-2.5 text-sm leading-relaxed"
+                          style={{ color: "var(--muted)" }}
+                        >
+                          <Check
+                            size={15}
+                            className="flex-shrink-0 mt-0.5"
+                            style={{ color: plan.color }}
+                          />
+                          {extra}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+
+                {/* Regular features (Starter & Premium) */}
+                {plan.features && !p.numberedFeatures && (
+                  <ul className="flex flex-col gap-4 mb-8 flex-1">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2.5 text-sm leading-relaxed"
+                        style={{ color: "var(--muted)" }}
+                      >
+                        <Check
+                          size={15}
+                          className="flex-shrink-0 mt-0.5"
+                          style={{ color: plan.color }}
+                        />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* CTA — all buttons now have solid background */}
                 <button
                   onClick={() => scrollTo("#contact")}
-                  className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300"
-                  style={
-                    plan.popular
-                      ? {
-                          background: `linear-gradient(135deg, ${plan.color}, #6366f1)`,
-                          color: "#fff",
-                          boxShadow: `0 4px 20px ${plan.color}40`,
-                        }
-                      : {
-                          background: "transparent",
-                          border: `1px solid var(--border)`,
-                          color: "var(--text)",
-                        }
-                  }
+                  className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
+                  style={{
+                    background: plan.popular
+                      ? `linear-gradient(135deg, ${plan.color}, #6366f1)`
+                      : `linear-gradient(135deg, ${plan.color}cc, ${plan.color})`,
+                    color: "#fff",
+                    boxShadow: `0 4px 20px ${plan.color}35`,
+                  }}
                 >
                   {plan.cta}
                   <ArrowRight size={15} />
