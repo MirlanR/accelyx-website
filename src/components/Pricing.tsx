@@ -32,16 +32,12 @@ const plans = [
     setup: "$3,500 one-time setup",
     tagline: "For growing businesses that want a full automation system working behind the scenes.",
     color: "#06b6d4",
-    heading: "5 automations we set up for you:",
-    numberedFeatures: [
-      "Lead Follow-Up — When someone fills out your form or sends an inquiry, they instantly get a personalized email, a text message, and your team gets notified. No lead slips through the cracks",
-      "Appointment Booking — Clients can book calls directly from your website. It syncs with your calendar, sends confirmation emails, and reminds them before the meeting automatically",
-      "Invoicing & Payments — After a deal is closed, an invoice is created and sent automatically. Payment reminders go out on schedule so you get paid on time without chasing anyone",
-      "Email Campaigns — Automated email sequences that nurture new leads, onboard new clients, and re-engage old contacts — all running in the background without you lifting a finger",
-      "CRM & Data Sync — Every lead, client, deal, and conversation is tracked in one place. All your tools stay in sync so nothing gets lost between your email, calendar, and CRM",
-    ],
-    extras: [
-      "Advanced AI chatbot that qualifies leads and can make voice calls on your behalf — 200 minutes of AI voice calls included per month (additional minutes just $0.15/min)",
+    heading: "What you get:",
+    features: [
+      "5 automations built for your business — lead follow-ups, appointment booking, invoicing, email campaigns, and CRM data sync",
+      "Advanced AI chatbot that qualifies leads and makes voice calls on your behalf — 200 minutes included per month ($0.15/min after)",
+      "Full CRM setup so every lead, client, and deal is tracked automatically",
+      "Automated email sequences that nurture leads and keep clients engaged",
       "Connect all your tools — no limits on integrations",
       "Delivered in 1–2 weeks with hands-on onboarding",
       "Priority support with a dedicated Slack channel",
@@ -112,7 +108,6 @@ export default function Pricing() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 items-start mb-10">
           {plans.map((plan) => {
             const Icon = plan.icon;
-            const p = plan as typeof plan & { numberedFeatures?: string[]; extras?: string[] };
             return (
               <div
                 key={plan.name}
@@ -180,63 +175,8 @@ export default function Pricing() {
                   {plan.heading}
                 </div>
 
-                {/* Numbered features (Professional) */}
-                {p.numberedFeatures && (
-                  <ol className="flex flex-col gap-4 mb-6 flex-1">
-                    {p.numberedFeatures.map((feature, i) => (
-                      <li
-                        key={i}
-                        className="flex items-start gap-3 text-sm leading-relaxed"
-                        style={{ color: "var(--muted)" }}
-                      >
-                        <span
-                          className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold mt-0.5"
-                          style={{ background: `${plan.color}20`, color: plan.color }}
-                        >
-                          {i + 1}
-                        </span>
-                        <span>
-                          <strong style={{ color: "var(--text)" }}>
-                            {feature.split(" — ")[0]}
-                          </strong>
-                          {" — "}
-                          {feature.split(" — ")[1]}
-                        </span>
-                      </li>
-                    ))}
-                  </ol>
-                )}
-
-                {/* Extras (Professional) */}
-                {p.extras && (
-                  <>
-                    <div
-                      className="text-xs font-bold uppercase tracking-wider mb-3"
-                      style={{ color: plan.color }}
-                    >
-                      Also included:
-                    </div>
-                    <ul className="flex flex-col gap-3 mb-8">
-                      {p.extras.map((extra) => (
-                        <li
-                          key={extra}
-                          className="flex items-start gap-2.5 text-sm leading-relaxed"
-                          style={{ color: "var(--muted)" }}
-                        >
-                          <Check
-                            size={15}
-                            className="flex-shrink-0 mt-0.5"
-                            style={{ color: plan.color }}
-                          />
-                          {extra}
-                        </li>
-                      ))}
-                    </ul>
-                  </>
-                )}
-
-                {/* Regular features (Starter & Premium) */}
-                {plan.features && !p.numberedFeatures && (
+                {/* Features */}
+                {plan.features && (
                   <ul className="flex flex-col gap-4 mb-8 flex-1">
                     {plan.features.map((feature) => (
                       <li
