@@ -144,8 +144,8 @@ export default function CTA() {
     if (!form.service)      errs.service = "Please select a service";
     if (!form.date)         errs.date    = "Please pick a date";
     if (!form.time)         errs.time    = "Please pick a time";
-    else if (availability === "taken") errs.time = "This slot is taken — please pick another time";
     else if (availability === "checking") errs.time = "Please wait — checking availability";
+    else if (availability === "taken") errs.time = "hidden";
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -562,7 +562,7 @@ export default function CTA() {
                       </p>
                     )}
 
-                    {errors.time && (
+                    {errors.time && errors.time !== "hidden" && (
                       <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.time}</p>
                     )}
                   </div>
