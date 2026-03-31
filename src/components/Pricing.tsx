@@ -35,7 +35,7 @@ const plans = [
     heading: "What you get:",
     features: [
       "5 automations built for your business — lead follow-ups, appointment booking, invoicing, email campaigns, and CRM data sync",
-      "Advanced AI chatbot that qualifies leads and makes voice calls on your behalf",
+      "AI Voice Receptionist that answers calls, qualifies leads, and books appointments on your behalf — 24/7, no human needed",
       "Full CRM setup so every lead, client, and deal is tracked automatically",
       "Automated email sequences that nurture leads and keep clients engaged",
       "Connect all your tools — no limits on integrations",
