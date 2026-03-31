@@ -35,7 +35,7 @@ const plans = [
     popular: true,
     highlights: [
       "5 automations: leads, booking, invoicing, email, CRM",
-      "Advanced AI chatbot + voice calls",
+      "Advanced AI chatbot + 200 min voice calls included",
       "All your tools connected — no limits",
       "Priority support with dedicated Slack channel",
     ],
@@ -51,7 +51,7 @@ const plans = [
     highlights: [
       "Unlimited automations for your entire business",
       "Dedicated AI engineer on your account",
-      "Custom-built AI models and integrations",
+      "Custom-built AI models + unlimited voice minutes",
       "SLA-backed priority support",
     ],
   },

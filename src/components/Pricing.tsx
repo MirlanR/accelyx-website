@@ -41,7 +41,7 @@ const plans = [
       "CRM & Data Sync — Every lead, client, deal, and conversation is tracked in one place. All your tools stay in sync so nothing gets lost between your email, calendar, and CRM",
     ],
     extras: [
-      "Advanced AI chatbot that qualifies leads and can make voice calls on your behalf",
+      "Advanced AI chatbot that qualifies leads and can make voice calls on your behalf — 200 minutes of AI voice calls included per month (additional minutes just $0.15/min)",
       "Connect all your tools — no limits on integrations",
       "Delivered in 1–2 weeks with hands-on onboarding",
       "Priority support with a dedicated Slack channel",
@@ -66,6 +66,7 @@ const plans = [
       "Custom-built AI models trained specifically on your data and workflows",
       "We design and build your entire system architecture from scratch",
       "Custom API connections and software integrations tailored to your exact needs",
+      "Unlimited AI voice call minutes included",
       "Guaranteed response times with SLA-backed priority support",
       "Delivered in 3–4 weeks with full onboarding and training",
       "Quarterly strategy sessions to plan what to automate next",
