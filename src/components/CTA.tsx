@@ -23,8 +23,6 @@ const services = [
 ];
 
 const COMPANY_EMAIL = "hello@accelyx.ai";
-const GOOGLE_SHEET_URL =
-  "https://script.google.com/macros/s/AKfycbx_yf0gKQBZ8YszM_pGFIRY232fAkbotLF3OJvCfPiOXPnL9wbbT6F6nybtD8lkzU4bqw/exec";
 const N8N_WEBHOOK_URL =
   "https://n8n.srv1299202.hstgr.cloud/webhook/lead-demo";
 const AVAILABILITY_WEBHOOK_URL =
@@ -161,7 +159,7 @@ export default function CTA() {
     setSubmitError("");
 
     try {
-      // Send to n8n webhook (primary — triggers Sheet + Calendar + Email)
+      // Send to n8n webhook — triggers Sheet + Calendar + Confirmation Email
       const webhookPayload = {
         name: `${form.firstName} ${form.lastName}`,
         email: form.email,
@@ -177,17 +175,9 @@ export default function CTA() {
         method: "POST",
         body: JSON.stringify(webhookPayload),
         headers: { "Content-Type": "application/json" },
-      }).catch(() => null); // Don't block on n8n failure
-
-      // Also send to Google Sheet as backup
-      const sheetPromise = fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        body: JSON.stringify(form),
-        headers: { "Content-Type": "text/plain" },
-        mode: "no-cors",
       }).catch(() => null);
 
-      await Promise.all([n8nPromise, sheetPromise]);
+      await n8nPromise;
       setSubmitted(true);
       setForm(defaultForm);
     } catch {

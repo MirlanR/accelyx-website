@@ -35,7 +35,7 @@ const plans = [
     heading: "What you get:",
     features: [
       "5 automations built for your business — lead follow-ups, appointment booking, invoicing, email campaigns, and CRM data sync",
-      "Advanced AI chatbot that qualifies leads and makes voice calls on your behalf — 200 minutes included per month ($0.15/min after)",
+      "Advanced AI chatbot that qualifies leads and makes voice calls on your behalf",
       "Full CRM setup so every lead, client, and deal is tracked automatically",
       "Automated email sequences that nurture leads and keep clients engaged",
       "Connect all your tools — no limits on integrations",
@@ -75,9 +75,8 @@ const plans = [
 ];
 
 export default function Pricing() {
-  const scrollTo = (href: string) => {
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  const goToContact = () => {
+    window.location.href = "/#contact";
   };
 
   return (
@@ -197,7 +196,7 @@ export default function Pricing() {
 
                 {/* CTA — all buttons now have solid background */}
                 <button
-                  onClick={() => scrollTo("#contact")}
+                  onClick={() => goToContact()}
                   className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
                   style={{
                     background: plan.popular
@@ -219,7 +218,7 @@ export default function Pricing() {
         <p className="text-center text-sm mt-8" style={{ color: "var(--muted)" }}>
           Not sure which plan fits?{" "}
           <button
-            onClick={() => scrollTo("#contact")}
+            onClick={() => goToContact()}
             className="font-semibold underline transition-colors duration-200"
             style={{ color: "var(--accent)" }}
           >
