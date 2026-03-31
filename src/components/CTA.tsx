@@ -195,7 +195,7 @@ export default function CTA() {
     } finally {
       setSubmitting(false);
     }
-  }, [form]);
+  }, [form, availability]);
 
   /* ── Min date = tomorrow ── */
   const tomorrow = new Date();
