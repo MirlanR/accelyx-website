@@ -12,50 +12,52 @@ const plans = [
   {
     name: "Starter",
     icon: Zap,
-    setup: "$1,500",
-    maintenance: "$200",
-    description: "Perfect for small businesses automating their first workflow.",
+    price: "$550",
+    period: "/ month",
+    setup: "$1,500 one-time setup",
+    description: "Perfect if you're just getting started with automation and want to see real results fast.",
     color: "#6366f1",
     highlights: [
-      "1 custom automation workflow",
-      "AI chatbot (FAQ + lead capture)",
-      "Up to 3 tool integrations",
-      "Delivered in 1–2 weeks",
+      "One complete automation built for your business",
+      "AI chatbot that captures leads 24/7",
+      "Up to 3 of your tools connected together",
+      "Ongoing support and monthly check-in",
     ],
   },
   {
-    name: "Growth",
+    name: "Professional",
     icon: Rocket,
-    setup: "$4,000",
-    maintenance: "$400",
-    description: "For scaling businesses that need multiple connected automations.",
+    price: "$950",
+    period: "/ month",
+    setup: "$3,000 one-time setup",
+    description: "For growing businesses that want a full automation system working behind the scenes.",
     color: "#06b6d4",
     popular: true,
     highlights: [
-      "Up to 5 custom workflows",
-      "Advanced AI chatbot + voice agent",
-      "Full CRM & email automation",
-      "Dedicated Slack channel",
+      "Up to 5 automations across your business",
+      "Advanced AI chatbot + voice calls",
+      "Full CRM and email automation setup",
+      "Priority support with dedicated Slack channel",
     ],
   },
   {
-    name: "Enterprise",
+    name: "Premium",
     icon: Building2,
-    setup: "Custom",
-    maintenance: "Custom",
-    description: "End-to-end AI transformation for ambitious companies.",
+    price: "Custom",
+    period: "let's talk",
+    setup: "Custom setup",
+    description: "For companies that want a dedicated AI team to automate everything end-to-end.",
     color: "#8b5cf6",
     highlights: [
-      "Unlimited workflows",
-      "Dedicated AI engineer",
-      "Custom integrations & API",
+      "Unlimited automations for your entire business",
+      "Dedicated AI engineer on your account",
+      "Custom-built AI models and integrations",
       "SLA-backed priority support",
     ],
   },
 ];
 
 export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
-  // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -104,13 +106,6 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
         {/* Header */}
         <div className="text-center mb-8">
-          <span
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider mb-4"
-            style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.3)", color: "#10b981" }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#10b981" }} />
-            7-Day Free Trial Included
-          </span>
           <h2
             className="text-2xl md:text-3xl font-bold mb-2"
             style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}
@@ -118,7 +113,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
             Simple, Transparent Pricing
           </h2>
           <p className="text-sm" style={{ color: "var(--muted)" }}>
-            One-time setup + optional monthly maintenance. We&apos;ll discuss the details on your strategy call.
+            One-time setup fee + flat monthly rate. No hidden fees, no lock-in — cancel anytime.
           </p>
         </div>
 
@@ -161,22 +156,19 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                   </span>
                 </div>
 
-                {/* Prices */}
+                {/* Price */}
                 <div className="mb-1">
                   <span
                     className="text-2xl font-bold"
                     style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}
                   >
-                    {plan.setup}
+                    {plan.price}
                   </span>
-                  <span className="text-xs ml-1.5" style={{ color: "var(--muted)" }}>one-time</span>
+                  <span className="text-xs ml-1.5" style={{ color: "var(--muted)" }}>{plan.period}</span>
                 </div>
                 <div className="mb-4">
-                  <span className="text-sm font-medium" style={{ color: plan.color }}>
-                    + {plan.maintenance}/mo
-                  </span>
-                  <span className="text-xs ml-1.5 px-1.5 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.12)", color: "#10b981" }}>
-                    optional
+                  <span className="text-xs font-medium" style={{ color: plan.color }}>
+                    + {plan.setup}
                   </span>
                 </div>
 
@@ -207,7 +199,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
                     color: plan.popular ? "white" : "var(--text)",
                   }}
                 >
-                  {plan.name === "Enterprise" ? "Let's Talk" : "Start Free Trial"}
+                  {plan.name === "Premium" ? "Let's Talk" : "Get Started"}
                   <ArrowRight size={14} />
                 </button>
               </div>
@@ -217,7 +209,7 @@ export default function PricingModal({ isOpen, onClose }: PricingModalProps) {
 
         {/* Footer */}
         <p className="text-center text-xs mt-6" style={{ color: "var(--muted)" }}>
-          7-day free trial · No credit card required · Full details discussed on your strategy call
+          No credit card required · Full details discussed on your strategy call
         </p>
       </div>
       </div>
