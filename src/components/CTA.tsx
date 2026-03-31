@@ -611,7 +611,7 @@ export default function CTA() {
                 </button>
 
                 <p className="text-xs text-center mt-4" style={{ color: "var(--muted)" }}>
-                  7-day free trial · No credit card · We'll confirm within 24 hours
+                  7-day free trial · No credit card · We'll confirm right away
                 </p>
               </form>
             )}
