@@ -35,3 +35,9 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# LibreOffice / temp lock files
+.~lock.*
+
+# Video automation temp files
+nexaflow-ai/video-automation/temp_clips/
