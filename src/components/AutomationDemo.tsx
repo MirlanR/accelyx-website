@@ -524,7 +524,7 @@ export default function AutomationDemo() {
             meetings, and follow up — all on autopilot. No coding needed.
           </p>
           <a
-            href="/#book"
+            href="/#contact"
             className="btn-primary inline-flex items-center gap-2"
           >
             Book Your Free Strategy Call
