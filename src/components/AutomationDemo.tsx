@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import BookingModal from "./BookingModal";
 import {
   Play,
   CheckCircle,
@@ -69,6 +70,7 @@ export default function AutomationDemo() {
   const [emailSending, setEmailSending] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [elapsed, setElapsed] = useState(0);
+  const [showBookingModal, setShowBookingModal] = useState(false);
   const timer = useRef<NodeJS.Timeout | null>(null);
 
   /* ── timer ── */
@@ -523,15 +525,16 @@ export default function AutomationDemo() {
             We build custom automation workflows that capture leads, book
             meetings, and follow up — all on autopilot. No coding needed.
           </p>
-          <a
-            href="/#contact"
+          <button
+            onClick={() => setShowBookingModal(true)}
             className="btn-primary inline-flex items-center gap-2"
           >
             Book Your Free Strategy Call
             <ArrowRight className="w-5 h-5" />
-          </a>
+          </button>
         </div>
       </div>
+      <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </section>
   );
 }
