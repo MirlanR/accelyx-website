@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { Check, Zap, ArrowRight, Rocket, Building2 } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 const plans = [
   {
@@ -75,9 +77,7 @@ const plans = [
 ];
 
 export default function Pricing() {
-  const goToContact = () => {
-    window.location.href = "/#contact";
-  };
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   return (
     <section id="pricing" className="section-padding relative overflow-hidden">
@@ -196,7 +196,7 @@ export default function Pricing() {
 
                 {/* CTA — all buttons now have solid background */}
                 <button
-                  onClick={() => goToContact()}
+                  onClick={() => setShowBookingModal(true)}
                   className="w-full py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
                   style={{
                     background: plan.popular
@@ -218,7 +218,7 @@ export default function Pricing() {
         <p className="text-center text-sm mt-8" style={{ color: "var(--muted)" }}>
           Not sure which plan fits?{" "}
           <button
-            onClick={() => goToContact()}
+            onClick={() => setShowBookingModal(true)}
             className="font-semibold underline transition-colors duration-200"
             style={{ color: "var(--accent)" }}
           >
@@ -227,6 +227,7 @@ export default function Pricing() {
           and we&apos;ll recommend the right fit for your business.
         </p>
       </div>
+      <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
     </section>
   );
 }

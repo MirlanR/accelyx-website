@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
 import PricingModal from "./PricingModal";
+import BookingModal from "./BookingModal";
 
 /* ── Accelyx AI branded logo mark ──────────────────── */
 const LogoMark = ({ theme }: { theme: string }) => (
@@ -29,7 +30,8 @@ export default function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const [isScrolled, setIsScrolled]   = useState(false);
   const [mobileOpen, setMobileOpen]   = useState(false);
-  const [pricingOpen, setPricingOpen] = useState(false);
+  const [pricingOpen, setPricingOpen]   = useState(false);
+  const [bookingOpen, setBookingOpen]   = useState(false);
 
   useEffect(() => {
     const handler = () => setIsScrolled(window.scrollY > 20);
@@ -120,7 +122,7 @@ export default function Navbar() {
               {theme === "dark" ? <Sun size={17} /> : <Moon size={17} />}
             </button>
             <button
-              onClick={() => scrollTo("#contact")}
+              onClick={() => setBookingOpen(true)}
               className="btn-primary text-sm px-5 py-2.5"
             >
               Book a Call
@@ -171,7 +173,7 @@ export default function Navbar() {
             </button>
           ))}
           <button
-            onClick={() => scrollTo("#contact")}
+            onClick={() => { setMobileOpen(false); setBookingOpen(true); }}
             className="btn-primary mt-2 justify-center text-sm"
           >
             Book a Call
@@ -181,6 +183,7 @@ export default function Navbar() {
     </header>
 
     <PricingModal isOpen={pricingOpen} onClose={() => setPricingOpen(false)} />
+    <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowRight, Play, CheckCircle } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 const badges = [
   "Workflow Automation",
@@ -9,6 +11,8 @@ const badges = [
 ];
 
 export default function Hero() {
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
   const scrollTo = (href: string) => {
     const el = document.querySelector(href);
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -46,7 +50,7 @@ export default function Hero() {
         <div className="flex flex-col items-center text-center max-w-5xl mx-auto">
           {/* ── Label badge ──────────────────────── */}
           <button
-            onClick={() => scrollTo("#contact")}
+            onClick={() => setShowBookingModal(true)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-fade-in cursor-pointer transition-all duration-300 hover:scale-105"
             style={{
               background: "rgba(99,102,241,0.1)",
@@ -109,7 +113,7 @@ export default function Hero() {
             style={{ animationDelay: "0.25s", opacity: 0, animationFillMode: "forwards" }}
           >
             <button
-              onClick={() => scrollTo("#contact")}
+              onClick={() => setShowBookingModal(true)}
               className="btn-primary px-8 py-4 text-base"
             >
               Start Your Free Trial
@@ -273,5 +277,6 @@ export default function Hero() {
         />
       </div>
     </section>
+    <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
   );
 }

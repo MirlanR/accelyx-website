@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Mail, Linkedin, Phone, Instagram, Youtube } from "lucide-react";
 import { useTheme } from "./ThemeProvider";
+import BookingModal from "./BookingModal";
 
 const LogoMark = ({ theme }: { theme: string }) => (
   <img
@@ -68,6 +70,8 @@ const socials = [
 
 export default function Footer() {
   const { theme } = useTheme();
+  const [showBookingModal, setShowBookingModal] = useState(false);
+
   const handleClick = (href: string) => {
     if (href.startsWith("#")) {
       const el = document.querySelector(href);
@@ -153,21 +157,33 @@ export default function Footer() {
               <ul className="space-y-3">
                 {links.map((link) => (
                   <li key={link.label}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => {
-                        if (link.href.startsWith("#")) {
-                          e.preventDefault();
-                          handleClick(link.href);
-                        }
-                      }}
-                      className="text-sm transition-colors duration-200"
-                      style={{ color: "var(--muted)" }}
-                      onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "var(--accent)"; }}
-                      onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "var(--muted)"; }}
-                    >
-                      {link.label}
-                    </a>
+                    {link.label === "Book a Call" ? (
+                      <button
+                        onClick={() => setShowBookingModal(true)}
+                        className="text-sm transition-colors duration-200 bg-transparent border-none p-0 cursor-pointer"
+                        style={{ color: "var(--muted)" }}
+                        onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "var(--accent)"; }}
+                        onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "var(--muted)"; }}
+                      >
+                        {link.label}
+                      </button>
+                    ) : (
+                      <a
+                        href={link.href}
+                        onClick={(e) => {
+                          if (link.href.startsWith("#")) {
+                            e.preventDefault();
+                            handleClick(link.href);
+                          }
+                        }}
+                        className="text-sm transition-colors duration-200"
+                        style={{ color: "var(--muted)" }}
+                        onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "var(--accent)"; }}
+                        onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "var(--muted)"; }}
+                      >
+                        {link.label}
+                      </a>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -189,5 +205,6 @@ export default function Footer() {
         </p>
       </div>
     </footer>
+    <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
   );
 }
