@@ -524,12 +524,10 @@ export default function AutomationDemo() {
             meetings, and follow up — all on autopilot. No coding needed.
           </p>
           <a
-            href="https://www.instagram.com/accelyx.ai/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/#book"
             className="btn-primary inline-flex items-center gap-2"
           >
-            DM &apos;automate&apos; to Get Started
+            Book Your Free Strategy Call
             <ArrowRight className="w-5 h-5" />
           </a>
         </div>
