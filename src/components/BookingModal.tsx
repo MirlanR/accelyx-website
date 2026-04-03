@@ -133,6 +133,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   };
   const inputErr: React.CSSProperties = { ...inputBase, borderColor: "#ef4444" };
 
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
   const handleReset = () => { setSubmitted(false); setForm(defaultForm); setErrors({}); };
   const handleClose = () => { onClose(); setTimeout(handleReset, 300); };
 
@@ -281,11 +283,29 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
                   <Calendar size={11} />Preferred Date<span style={{ color: "#ef4444" }}>*</span>
                 </label>
-                <input type="date" min={minDate} value={form.date} onChange={set("date")}
-                  style={errors.date ? inputErr : inputBase}
-                  onFocus={e => { if (!errors.date) e.target.style.borderColor = "var(--accent)"; }}
-                  onBlur={e  => { if (!errors.date) e.target.style.borderColor = "var(--border)"; }}
-                />
+                {/* Wrapper makes the entire field clickable and opens native picker */}
+                <div
+                  style={{ position: "relative", cursor: "pointer" }}
+                  onClick={() => { try { dateInputRef.current?.showPicker(); } catch { dateInputRef.current?.focus(); } }}
+                >
+                  <input
+                    ref={dateInputRef}
+                    type="date"
+                    min={minDate}
+                    value={form.date}
+                    onChange={set("date")}
+                    style={{
+                      ...(errors.date ? inputErr : inputBase),
+                      cursor: "pointer",
+                      colorScheme: "dark",
+                      boxSizing: "border-box",
+                      /* Prevent the year segment from overflowing */
+                      minWidth: 0,
+                    }}
+                    onFocus={e => { if (!errors.date) e.target.style.borderColor = "var(--accent)"; }}
+                    onBlur={e  => { if (!errors.date) e.target.style.borderColor = "var(--border)"; }}
+                  />
+                </div>
                 {errors.date && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.date}</p>}
               </div>
               <div>
