@@ -19,6 +19,7 @@ export default function Hero() {
   };
 
   return (
+    <>
     <section
       className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-grid"
       style={{ paddingTop: "80px" }}
@@ -278,5 +279,6 @@ export default function Hero() {
       </div>
     </section>
     <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </>
   );
 }

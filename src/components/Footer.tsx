@@ -85,6 +85,7 @@ export default function Footer() {
   };
 
   return (
+    <>
     <footer style={{ background: "var(--surface)", borderTop: "1px solid var(--border)" }}>
       {/* Main */}
       <div className="container-max section-padding py-16">
@@ -206,5 +207,6 @@ export default function Footer() {
       </div>
     </footer>
     <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </>
   );
 }
