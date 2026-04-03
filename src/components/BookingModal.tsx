@@ -276,7 +276,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             </div>
 
             {/* Date + Time */}
-            <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
               <div>
                 <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
                   <Calendar size={11} />Preferred Date<span style={{ color: "#ef4444" }}>*</span>
