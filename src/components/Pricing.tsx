@@ -29,7 +29,7 @@ const plans = [
   {
     name: "Professional",
     icon: Rocket,
-    price: "$950",
+    price: "$1,200",
     period: "/ month",
     setup: "$3,500 one-time setup",
     tagline: "For growing businesses that want a full automation system working behind the scenes.",
