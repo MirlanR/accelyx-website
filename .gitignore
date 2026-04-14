@@ -41,3 +41,6 @@ next-env.d.ts
 
 # Video automation temp files
 nexaflow-ai/video-automation/temp_clips/
+
+# Virtual environment
+.venv/

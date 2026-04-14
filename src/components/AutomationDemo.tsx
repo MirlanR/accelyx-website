@@ -60,7 +60,7 @@ const NEW_LEAD: LeadRow = {
 };
 
 /* ───────────────── main component ───────────────── */
-export default function AutomationDemo() {
+export default function AutomationDemo({ embedded = false }: { embedded?: boolean }) {
   const [step, setStep] = useState<Step>("idle");
   const [typing, setTyping] = useState({ name: "", email: "", company: "" });
   const [sheetRows, setSheetRows] = useState<LeadRow[]>(EXISTING_LEADS);
@@ -185,28 +185,8 @@ export default function AutomationDemo() {
       ? 3
       : 4;
 
-  return (
-    <section className="relative min-h-screen pt-28 pb-20 overflow-hidden">
-      {/* bg glow */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-brand-500/5 blur-[120px]" />
-        <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] rounded-full bg-cyan-500/5 blur-[100px]" />
-      </div>
-
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        {/* ── Header ── */}
-        <div className="text-center mb-12">
-          <span className="section-label">Live Demo</span>
-          <h1 className="section-title mt-3">
-            Watch AI Automation{" "}
-            <span className="gradient-text">In Action</span>
-          </h1>
-          <p className="section-subtitle mt-4 max-w-2xl mx-auto">
-            See exactly how a new lead gets captured, qualified, booked into
-            your calendar, and sent a confirmation email — all in seconds,
-            with zero manual work.
-          </p>
-        </div>
+  const content = (
+    <>
 
         {/* ── Progress bar ── */}
         <div className="flex items-center justify-center gap-2 sm:gap-4 mb-10 flex-wrap">
@@ -533,8 +513,39 @@ export default function AutomationDemo() {
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
-      </div>
       <BookingModal isOpen={showBookingModal} onClose={() => setShowBookingModal(false)} />
+    </>
+  );
+
+  if (embedded) {
+    return <div>{content}</div>;
+  }
+
+  return (
+    <section className="relative min-h-screen pt-28 pb-20 overflow-hidden">
+      {/* bg glow */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] rounded-full bg-brand-500/5 blur-[120px]" />
+        <div className="absolute bottom-1/4 right-0 w-[600px] h-[600px] rounded-full bg-cyan-500/5 blur-[100px]" />
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* ── Header ── */}
+        <div className="text-center mb-12">
+          <span className="section-label">Live Demo</span>
+          <h1 className="section-title mt-3">
+            Watch AI Automation{" "}
+            <span className="gradient-text">In Action</span>
+          </h1>
+          <p className="section-subtitle mt-4 max-w-2xl mx-auto">
+            See exactly how a new lead gets captured, qualified, booked into
+            your calendar, and sent a confirmation email — all in seconds,
+            with zero manual work.
+          </p>
+        </div>
+
+        {content}
+      </div>
     </section>
   );
 }
