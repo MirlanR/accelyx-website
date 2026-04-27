@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import BookingModal from "./BookingModal";
 import {
   Play,
+  Pause,
   CheckCircle,
   Mail,
   Calendar,
@@ -175,11 +176,13 @@ export default function VoiceAIDemo() {
   const [showBookingModal, setShowBookingModal] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   const timer = useRef<NodeJS.Timeout | null>(null);
   const chatRef = useRef<HTMLDivElement>(null);
   const timeoutsRef = useRef<NodeJS.Timeout[]>([]);
   const cancelledRef = useRef(false);
+  const pausedRef = useRef(false);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const audioAvailableRef = useRef<boolean | null>(null);
 
@@ -200,10 +203,17 @@ export default function VoiceAIDemo() {
   /**
    * Play a pre-recorded audio file. Returns a Promise that resolves when done.
    * Falls back to browser speech synthesis if audio files aren't available.
+   * Handles pause/resume and mute properly.
    */
   const playAudio = (audioFile: string, text: string, speaker: "ai" | "caller"): Promise<void> => {
     return new Promise((resolve) => {
-      if (!voiceEnabled || typeof window === "undefined") {
+      if (typeof window === "undefined") {
+        resolve();
+        return;
+      }
+
+      // If voice is disabled, skip audio but continue
+      if (!voiceEnabled) {
         resolve();
         return;
       }
@@ -214,17 +224,28 @@ export default function VoiceAIDemo() {
         currentAudioRef.current = audio;
 
         audio.onended = () => {
-          currentAudioRef.current = null;
+          if (currentAudioRef.current === audio) {
+            currentAudioRef.current = null;
+          }
           resolve();
         };
         audio.onerror = () => {
           // Fallback to browser speech if audio file fails
-          currentAudioRef.current = null;
+          if (currentAudioRef.current === audio) {
+            currentAudioRef.current = null;
+          }
           fallbackSpeak(text, speaker).then(resolve);
         };
 
+        // Handle pause state
+        if (isPaused) {
+          audio.pause();
+        }
+
         audio.play().catch(() => {
-          currentAudioRef.current = null;
+          if (currentAudioRef.current === audio) {
+            currentAudioRef.current = null;
+          }
           fallbackSpeak(text, speaker).then(resolve);
         });
         return;
@@ -290,6 +311,38 @@ export default function VoiceAIDemo() {
       if (timer.current) clearInterval(timer.current);
     };
   }, [step]);
+
+  /* ── handle pause/resume ── */
+  useEffect(() => {
+    pausedRef.current = isPaused;
+    if (currentAudioRef.current) {
+      if (isPaused) {
+        currentAudioRef.current.pause();
+      } else {
+        currentAudioRef.current.play().catch(() => {
+          // Ignore errors if audio can't be resumed
+        });
+      }
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      if (isPaused) {
+        window.speechSynthesis.pause();
+      } else {
+        window.speechSynthesis.resume();
+      }
+    }
+  }, [isPaused]);
+
+  /* ── handle mute - stop current audio but keep demo running ── */
+  useEffect(() => {
+    if (!voiceEnabled && currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.currentTime = 0;
+    }
+    if (!voiceEnabled && typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+  }, [voiceEnabled]);
 
   /* ── cleanup timeouts ── */
   useEffect(() => {
@@ -620,6 +673,17 @@ export default function VoiceAIDemo() {
                 {(elapsed / 1000).toFixed(1)}s
               </span>
             </div>
+            <button
+              onClick={() => setIsPaused(!isPaused)}
+              className={`p-2.5 rounded-xl border transition-all duration-300 ${
+                isPaused
+                  ? "border-brand-500/30 bg-brand-500/10 text-brand-400"
+                  : "border-[var(--border)] bg-[var(--card)] text-[var(--muted)]"
+              }`}
+              title={isPaused ? "Resume call" : "Pause call"}
+            >
+              {isPaused ? <Play className="w-4 h-4 fill-current" /> : <Pause className="w-4 h-4" />}
+            </button>
             <button
               onClick={() => { setVoiceEnabled(!voiceEnabled); if (voiceEnabled) stopSpeech(); }}
               className={`p-2.5 rounded-xl border transition-all duration-300 ${

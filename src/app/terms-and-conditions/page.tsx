@@ -18,7 +18,7 @@ export default function TermsAndConditions() {
           <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}>
             Terms &amp; Conditions
           </h1>
-          <p className="text-sm mb-12" style={{ color: "var(--muted)" }}>Last updated: April 5, 2026</p>
+          <p className="text-sm mb-12" style={{ color: "var(--muted)" }}>Last updated: April 14, 2026</p>
 
           <div className="max-w-4xl space-y-10 text-base leading-7" style={{ color: "var(--muted)" }}>
 
@@ -62,7 +62,9 @@ export default function TermsAndConditions() {
               </h2>
               <ul className="list-disc pl-6 space-y-2">
                 <li>A one-time setup fee is charged before work begins</li>
-                <li>Monthly subscription fees are billed in advance</li>
+                <li>Monthly subscription fees are billed in advance and include all necessary tools and services provided by Accelyx AI</li>
+                <li>All third-party integrations and tools required for your automations are provided and maintained by Accelyx AI as part of your subscription</li>
+                <li>You are not responsible for separately purchasing or maintaining integration tools</li>
                 <li>Payments are processed securely via Stripe</li>
                 <li>We do not store credit card information on our servers</li>
                 <li>Refunds are evaluated on a case-by-case basis within 7 days of payment</li>

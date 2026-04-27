@@ -28,7 +28,7 @@ export default function CookiePolicy() {
             Cookie Policy
           </h1>
           <p className="text-sm mb-12" style={{ color: "var(--muted)" }}>
-            Last updated: March 25, 2026
+            Last updated: April 14, 2026
           </p>
 
           <div className="max-w-4xl space-y-10 text-base leading-7" style={{ color: "var(--muted)" }}>

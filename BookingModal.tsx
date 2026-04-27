@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import {
   X, Calendar, Clock, Mail, Phone,
-  CheckCircle, Zap, User, Building2, MessageSquare, Loader2
+  CheckCircle, Zap, User, Loader2
 } from "lucide-react";
 
 const timeSlots = [
@@ -172,7 +172,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             }),
           });
           if (eventRes.ok) {
-            console.log("✅ Calendar event created in GHL");
+            console.log("Calendar event created in GHL");
           }
         } catch (err) {
           console.error("Error creating GHL calendar event:", err);
@@ -308,7 +308,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               {errors.email && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.email}</p>}
             </div>
 
-            {/* Phone */}
+            {/* Phone - REQUIRED */}
             <div className="mb-4">
               <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
                 <Phone size={11} />Phone<span style={{ color: "#ef4444" }}>*</span>
@@ -337,7 +337,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
               {errors.service && <p className="text-xs mt-1" style={{ color: "#ef4444" }}>{errors.service}</p>}
             </div>
 
-            {/* Timezone */}
+            {/* Timezone - NEW */}
             <div className="mb-4">
               <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
                 <Clock size={11} />Your Timezone<span style={{ color: "#ef4444" }}>*</span>
@@ -357,7 +357,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 <label className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--muted)" }}>
                   <Calendar size={11} />Preferred Date<span style={{ color: "#ef4444" }}>*</span>
                 </label>
-                {/* Wrapper makes the entire field clickable and opens native picker */}
                 <div
                   style={{ position: "relative", cursor: "pointer" }}
                   onClick={() => { try { dateInputRef.current?.showPicker(); } catch { dateInputRef.current?.focus(); } }}
@@ -374,7 +373,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                       cursor: "pointer",
                       colorScheme: "dark",
                       boxSizing: "border-box",
-                      /* Prevent the year segment from overflowing */
                       minWidth: 0,
                     }}
                     onFocus={e => { if (!errors.date) e.target.style.borderColor = "var(--accent)"; }}
@@ -400,12 +398,11 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                       const [hours] = timePart.split(":").map(Number);
                       const displayHours = ampm === "PM" && hours !== 12 ? hours + 12 : (ampm === "AM" && hours === 12 ? 0 : hours);
                       const earliestAvailableHour = now.getHours() + 4;
-                      if (displayHours < earliestAvailableHour) return null; // Hide unavailable times
+                      if (displayHours < earliestAvailableHour) return null;
                     }
                     return <option key={t} value={t}>{t}</option>;
                   })}
                 </select>
-                {/* Availability status */}
                 {availability === "checking" && (
                   <p className="text-xs mt-1 flex items-center gap-1" style={{ color: "var(--muted)" }}>
                     <Loader2 size={10} className="animate-spin" /> Checking availability...
@@ -426,7 +423,6 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 )}
               </div>
             </div>
-
 
             {/* Submit */}
             <button

@@ -18,7 +18,7 @@ export default function PrivacyPolicy() {
           <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "'Syne',sans-serif", color: "var(--text)" }}>
             Privacy Policy
           </h1>
-          <p className="text-sm mb-12" style={{ color: "var(--muted)" }}>Last updated: April 5, 2026</p>
+          <p className="text-sm mb-12" style={{ color: "var(--muted)" }}>Last updated: April 14, 2026</p>
           <div className="max-w-4xl space-y-10 text-base leading-7" style={{ color: "var(--muted)" }}>
             <section>
               <h2 className="text-xl md:text-2xl font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Syne',sans-serif" }}>1. Information We Collect</h2>
@@ -55,12 +55,14 @@ export default function PrivacyPolicy() {
             </section>
             <section>
               <h2 className="text-xl md:text-2xl font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Syne',sans-serif" }}>4. Third-Party Services</h2>
+              <p className="mb-4">We use carefully selected third-party service providers to deliver our automation services. These services include:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li><strong style={{ color: "var(--text)" }}>Twilio</strong> — SMS reminders and notifications</li>
-                <li><strong style={{ color: "var(--text)" }}>Google Calendar</strong> — scheduling</li>
-                <li><strong style={{ color: "var(--text)" }}>Stripe</strong> — payment processing</li>
-                <li><strong style={{ color: "var(--text)" }}>n8n</strong> — workflow automation</li>
+                <li>SMS messaging and notification services for appointment reminders</li>
+                <li>Calendar and scheduling services for appointment management</li>
+                <li>Payment processing services for secure transactions</li>
+                <li>Workflow automation and integration services</li>
               </ul>
+              <p className="mt-4">All third-party service providers are contractually bound to protect your data and comply with applicable privacy laws. We only share the minimum information necessary to provide our services.</p>
             </section>
             <section>
               <h2 className="text-xl md:text-2xl font-bold mb-4" style={{ color: "var(--text)", fontFamily: "'Syne',sans-serif" }}>5. Your Rights</h2>
